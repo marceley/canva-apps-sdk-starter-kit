@@ -15,22 +15,25 @@ export function createFrontpageReplacements(boxData: BoxData): Record<string, st
 /**
  * Creates placeholder replacement mappings for a specific recipe
  * @param recipe - The recipe data
+ * @param index - The index of the recipe (0-based)
  * @returns Object mapping placeholder names to replacement values
  */
-export function createRecipeReplacements(recipe: Recipe): Record<string, string> {
+export function createRecipeReplacements(recipe: Recipe, index: number): Record<string, string> {
+  const recipeNumber = index + 1;
   return {
-    recipeTitle: recipe.title,
-    recipeDay: recipe.day.toString(),
-    recipeIngredients: recipe.ingredients.join('\n• '),
+    [`recipeTitle_${recipeNumber}`]: recipe.title,
+    [`recipeDay_${recipeNumber}`]: recipe.day.toString(),
+    [`recipeIngredients_${recipeNumber}`]: recipe.ingredients.join('\n• '),
   };
 }
 
 /**
  * Creates formatted method replacements for a specific recipe
  * @param recipe - The recipe data
+ * @param index - The index of the recipe (0-based)
  * @returns Object mapping placeholder names to formatted content
  */
-export function createMethodReplacements(recipe: Recipe): Record<string, { headers: string[]; content: string[] }> {
+export function createMethodReplacements(recipe: Recipe, index: number): Record<string, { headers: string[]; content: string[] }> {
   const headers: string[] = [];
   const content: string[] = [];
   
@@ -39,8 +42,9 @@ export function createMethodReplacements(recipe: Recipe): Record<string, { heade
     content.push(step.text);
   });
   
+  const recipeNumber = index + 1;
   return {
-    recipeMethod: { headers, content }
+    [`recipeMethod_${recipeNumber}`]: { headers, content }
   };
 }
 
@@ -74,14 +78,39 @@ export function formatMethodSteps(method: Recipe['method']): string {
 /**
  * Creates all replacement mappings for a recipe page
  * @param recipe - The recipe data
+ * @param index - The index of the recipe (0-based)
  * @returns Object containing both simple and formatted replacements
  */
-export function createRecipePageReplacements(recipe: Recipe): {
+export function createRecipePageReplacements(recipe: Recipe, index: number): {
   simple: Record<string, string>;
   formatted: Record<string, { headers: string[]; content: string[] }>;
 } {
   return {
-    simple: createRecipeReplacements(recipe),
-    formatted: createMethodReplacements(recipe)
+    simple: createRecipeReplacements(recipe, index),
+    formatted: createMethodReplacements(recipe, index)
+  };
+}
+
+/**
+ * Creates all replacement mappings for all recipes in a box
+ * @param recipes - Array of recipe data
+ * @returns Object containing both simple and formatted replacements for all recipes
+ */
+export function createAllRecipeReplacements(recipes: Recipe[]): {
+  simple: Record<string, string>;
+  formatted: Record<string, { headers: string[]; content: string[] }>;
+} {
+  const allSimple: Record<string, string> = {};
+  const allFormatted: Record<string, { headers: string[]; content: string[] }> = {};
+
+  recipes.forEach((recipe, index) => {
+    const recipeReplacements = createRecipePageReplacements(recipe, index);
+    Object.assign(allSimple, recipeReplacements.simple);
+    Object.assign(allFormatted, recipeReplacements.formatted);
+  });
+
+  return {
+    simple: allSimple,
+    formatted: allFormatted
   };
 }

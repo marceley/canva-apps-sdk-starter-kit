@@ -15,10 +15,16 @@ import type { Box, BoxData, WeekOption } from "./types";
 import { replacePlaceholders, replacePlaceholdersWithFormatting } from "utils/text_replacement";
 import { 
   createFrontpageReplacements, 
-  createRecipePageReplacements 
+  createAllRecipeReplacements 
 } from "./services/recipe_page_generator";
-import { addPage, getDesignMetadata } from "@canva/design";
 import { CanvaError } from "@canva/error";
+import { prepareDesignEditor } from "@canva/intents/design";
+
+prepareDesignEditor({
+  render: async () => {
+    return <App />;
+  },
+});
 
 export const App = () => {
   const [boxes, setBoxes] = useState<Box[]>([]);
@@ -84,33 +90,20 @@ export const App = () => {
         throw new Error("Selected box not found");
       }
 
-      // Get design metadata to check if we can add pages
-      const { defaultPageDimensions } = await getDesignMetadata();
-      if (!defaultPageDimensions) {
-        throw new Error("Cannot add pages in this design type");
-      }
-
       // Process frontpage (current page) - replace placeholders
       const frontpageReplacements = createFrontpageReplacements(boxData);
       await replacePlaceholders(frontpageReplacements);
 
-      // Create pages for each recipe
-      for (const recipe of boxData.recipes) {
-        // Add a new page for this recipe
-        await addPage({
-          title: `Recipe ${recipe.day}: ${recipe.title}`,
-          elements: [], // Empty page - template will be populated by text replacement
-        });
+      // Create all recipe replacements for numbered placeholders
+      const allRecipeReplacements = createAllRecipeReplacements(boxData.recipes);
+      
+      // Replace all recipe placeholders in the current document
+      await replacePlaceholdersWithFormatting(
+        allRecipeReplacements.simple,
+        allRecipeReplacements.formatted
+      );
 
-        // Replace placeholders in the new recipe page
-        const recipeReplacements = createRecipePageReplacements(recipe);
-        await replacePlaceholdersWithFormatting(
-          recipeReplacements.simple,
-          recipeReplacements.formatted
-        );
-      }
-
-      setSuccess(`Successfully created recipe document with ${boxData.recipes.length} recipes!`);
+      setSuccess(`Successfully filled recipe document with ${boxData.recipes.length} recipes!`);
     } catch (err) {
       if (err instanceof CanvaError) {
         switch (err.code) {
