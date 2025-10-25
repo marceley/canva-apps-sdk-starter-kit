@@ -29,6 +29,7 @@ export const App = () => {
 
   return (
     <div className={styles.scrollContainer}>
+      <h1>Bambino's App 1</h1>
       <Rows spacing="2u">
         <Text>
           <FormattedMessage
