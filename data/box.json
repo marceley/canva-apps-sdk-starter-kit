@@ -1,0 +1,91 @@
+{
+  "frontpage": {
+    "title": "Aktiv hverdag",
+    "ingredients": ["Kylling", "Egg", "Potato", "Carrot", "Broccoli"]
+  },
+  "recipes": [
+    {
+      "id": "1",
+      "day": 1,
+      "name": "Kylling i karry",
+      "method": [
+        {
+          "header": "Inden du begynder",
+          "text": "Tænd ovnen til 180°C"
+        },
+        {
+          "header": "Tilberedning",
+          "text": "Hæld 100g kylling i en skål og tilsæt 100g egg, 100g potato, 100g carrot og 100g broccoli"
+        },
+        {
+          "text": "Hæld 100g kylling i en skål og tilsæt 100g egg, 100g potato, 100g carrot og 100g broccoli"
+        },
+        {
+          "text": "Tag kyllingen ud af ovnen og server med ris og broccolini"
+        },
+        {
+          "text": "Server med ris og broccolini"
+        },
+        {
+          "header": "Til imorgen",
+          "text": "Sæt kyllingen i køleskabet"
+        }
+      ],
+      "ingredients": ["100g kylling", "Egg", "Potato", "Carrot", "Broccoli"]
+    },
+    {
+      "id": "2",
+      "day": 2,
+      "name": "Kødboller med kartofler",
+      "method": [
+        {
+          "header": "Inden du begynder",
+          "text": "Tænd ovnen til 180°C"
+        },
+        {
+          "header": "Tilberedning",
+          "text": "Hæld 100g kylling i en skål og tilsæt 100g egg, 100g potato, 100g carrot og 100g broccoli"
+        },
+        {
+          "text": "Hæld 100g kylling i en skål og tilsæt 100g egg, 100g potato, 100g carrot og 100g broccoli"
+        },
+        {
+          "text": "Tag kyllingen ud af ovnen og server med ris og broccolini"
+        },
+        {
+          "text": "Server med ris og broccolini"
+        },
+        {
+          "header": "Til imorgen",
+          "text": "Sæt kyllingen i køleskabet"
+        }
+      ],
+      "ingredients": ["Kylling", "Egg", "Potato", "Carrot", "Broccoli"]
+    },
+    {
+      "id": "3",
+      "day": 3,
+      "name": "Albigon i sød sovs",
+      "method": [
+        {
+          "header": "Inden du begynder",
+          "text": "Tænd ovnen til 180°C"
+        },
+        {
+          "header": "Tilberedning",
+          "text": "Hæld 100g kylling i en skål og tilsæt 100g egg, 100g potato, 100g carrot og 100g broccoli"
+        },
+        {
+          "text": "Hæld 100g kylling i en skål og tilsæt 100g egg, 100g potato, 100g carrot og 100g broccoli"
+        },
+        {
+          "text": "Tag kyllingen ud af ovnen og server med ris og broccolini"
+        },
+        {
+          "text": "Server med ris og broccolini"
+        }
+      ],
+      "ingredients": ["Oksekød", "Egg", "Potato", "Carrot", "Broccoli"]
+    }
+  ]
+}
