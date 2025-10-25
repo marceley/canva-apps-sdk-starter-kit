@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { editContent } from "@canva/design";
 
 /**
@@ -8,32 +9,54 @@ import { editContent } from "@canva/design";
 export async function replacePlaceholders(
   replacements: Record<string, string>
 ): Promise<void> {
+  console.log("Replacing placeholders with:", replacements);
   await editContent(
     {
       contentType: "richtext",
       target: "current_page",
     },
     async (session) => {
+      console.log("Text replacement session started, processing", session.contents.length, "text ranges");
+      if (session.contents.length === 0) {
+        console.log("WARNING: No text content found in the document! Make sure there are text elements with placeholders in your template.");
+        return;
+      }
       // Process each text range in the session
       for (const range of session.contents) {
         const originalText = range.readPlaintext();
+        console.log("Original text:", originalText);
+        console.log("Text length:", originalText.length);
+        console.log("Looking for placeholders in text...");
         let updatedText = originalText;
 
         // Replace all placeholder patterns
         for (const [placeholder, replacement] of Object.entries(replacements)) {
           const pattern = new RegExp(`\\{\\{${placeholder}\\}\\}`, "g");
-          updatedText = updatedText.replace(pattern, replacement);
+          const matches = updatedText.match(pattern);
+          console.log(`Checking for placeholder {{${placeholder}}} in text:`, updatedText.includes(`{{${placeholder}}}`));
+          console.log(`Regex pattern:`, pattern);
+          if (matches) {
+            console.log(`Found ${matches.length} matches for placeholder {{${placeholder}}}, replacing with:`, replacement);
+            updatedText = updatedText.replace(pattern, replacement);
+          } else {
+            console.log(`No matches found for placeholder {{${placeholder}}}`);
+          }
         }
 
         // Only update if text has changed
         if (updatedText !== originalText) {
+          console.log("Text updated from:", originalText, "to:", updatedText);
           const length = originalText.length;
           range.replaceText({ index: 0, length }, updatedText);
+        } else {
+          console.log("No changes needed for this text range");
         }
       }
 
       // Commit all changes
+      console.log("Committing text replacement changes...");
       await session.sync();
+      console.log("Text replacement completed");
     }
   );
 }
@@ -48,42 +71,67 @@ export async function replacePlaceholdersWithFormatting(
   replacements: Record<string, string>,
   formattedReplacements: Record<string, { headers: string[]; content: string[] }>
 ): Promise<void> {
+  console.log("Replacing placeholders with formatting - simple:", replacements);
+  console.log("Replacing placeholders with formatting - formatted:", formattedReplacements);
   await editContent(
     {
       contentType: "richtext",
       target: "current_page",
     },
     async (session) => {
+      console.log("Formatted text replacement session started, processing", session.contents.length, "text ranges");
+      if (session.contents.length === 0) {
+        console.log("WARNING: No text content found in the document! Make sure there are text elements with placeholders in your template.");
+        return;
+      }
       // Process each text range in the session
       for (const range of session.contents) {
         const originalText = range.readPlaintext();
+        console.log("Original text:", originalText);
+        console.log("Text length:", originalText.length);
+        console.log("Looking for placeholders in text...");
         let updatedText = originalText;
 
         // First, replace simple text placeholders
         for (const [placeholder, replacement] of Object.entries(replacements)) {
           const pattern = new RegExp(`\\{\\{${placeholder}\\}\\}`, "g");
-          updatedText = updatedText.replace(pattern, replacement);
+          const matches = updatedText.match(pattern);
+          console.log(`Checking for simple placeholder {{${placeholder}}} in text:`, updatedText.includes(`{{${placeholder}}}`));
+          console.log(`Regex pattern:`, pattern);
+          if (matches) {
+            console.log(`Found ${matches.length} matches for simple placeholder {{${placeholder}}}, replacing with:`, replacement);
+            updatedText = updatedText.replace(pattern, replacement);
+          } else {
+            console.log(`No matches found for simple placeholder {{${placeholder}}}`);
+          }
         }
 
         // Then handle formatted replacements
         for (const [placeholder, formatted] of Object.entries(formattedReplacements)) {
           const pattern = new RegExp(`\\{\\{${placeholder}\\}\\}`, "g");
           if (updatedText.includes(`{{${placeholder}}}`)) {
+            console.log(`Found formatted placeholder ${placeholder}, replacing with formatted content`);
             // Replace the placeholder with formatted content
             const formattedText = formatMethodSteps(formatted.headers, formatted.content);
+            console.log("Formatted text:", formattedText);
             updatedText = updatedText.replace(pattern, formattedText);
           }
         }
 
         // Only update if text has changed
         if (updatedText !== originalText) {
+          console.log("Text updated from:", originalText, "to:", updatedText);
           const length = originalText.length;
           range.replaceText({ index: 0, length }, updatedText);
+        } else {
+          console.log("No changes needed for this text range");
         }
       }
 
       // Commit all changes
+      console.log("Committing formatted text replacement changes...");
       await session.sync();
+      console.log("Formatted text replacement completed");
     }
   );
 }

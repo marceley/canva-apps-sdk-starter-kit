@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   Button,
   FormField,
@@ -44,16 +45,19 @@ export const App = () => {
   }, []);
 
   const loadBoxes = async () => {
+    console.log("Loading boxes...");
     try {
       const boxesData = await fetchBoxes();
+      console.log("Boxes loaded:", boxesData);
       setBoxes(boxesData);
     } catch (err) {
       setError("Failed to load boxes");
-      console.error(err);
+      console.error("Error loading boxes:", err);
     }
   };
 
   const handleSubmit = async () => {
+    console.log("Handle submit called with:", { selectedBox, selectedWeek });
     if (!selectedBox || !selectedWeek) {
       setError("Please select both a box and a week");
       return;
@@ -63,17 +67,20 @@ export const App = () => {
     setError("");
 
     try {
+      console.log("Fetching box data for:", { selectedBox, selectedWeek });
       const data = await fetchBoxData(selectedBox, selectedWeek);
+      console.log("Box data fetched:", data);
       setBoxData(data);
     } catch (err) {
       setError("Failed to fetch recipe data");
-      console.error(err);
+      console.error("Error fetching box data:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
   const createRecipeDocument = async () => {
+    console.log("Creating recipe document with boxData:", boxData);
     if (!boxData || !selectedBox) {
       setError("No recipe data available");
       return;
@@ -86,26 +93,39 @@ export const App = () => {
     try {
       // Get the selected box to access templateId
       const selectedBoxData = boxes.find(box => box.id === selectedBox);
+      console.log("Selected box data:", selectedBoxData);
       if (!selectedBoxData) {
         throw new Error("Selected box not found");
       }
 
       // Process frontpage (current page) - replace placeholders
+      console.log("Creating frontpage replacements...");
       const frontpageReplacements = createFrontpageReplacements(boxData);
+      console.log("Frontpage replacements:", frontpageReplacements);
+      console.log("Frontpage placeholders to look for:", Object.keys(frontpageReplacements).map(key => `{{${key}}}`));
       await replacePlaceholders(frontpageReplacements);
+      console.log("Frontpage placeholders replaced");
 
       // Create all recipe replacements for numbered placeholders
+      console.log("Creating all recipe replacements...");
       const allRecipeReplacements = createAllRecipeReplacements(boxData.recipes);
+      console.log("All recipe replacements:", allRecipeReplacements);
+      console.log("Simple placeholders to look for:", Object.keys(allRecipeReplacements.simple).map(key => `{{${key}}}`));
+      console.log("Formatted placeholders to look for:", Object.keys(allRecipeReplacements.formatted).map(key => `{{${key}}}`));
       
       // Replace all recipe placeholders in the current document
+      console.log("Replacing recipe placeholders...");
       await replacePlaceholdersWithFormatting(
         allRecipeReplacements.simple,
         allRecipeReplacements.formatted
       );
+      console.log("Recipe placeholders replaced");
 
       setSuccess(`Successfully filled recipe document with ${boxData.recipes.length} recipes!`);
     } catch (err) {
+      console.error("Error creating recipe document:", err);
       if (err instanceof CanvaError) {
+        console.error("Canva error code:", err.code);
         switch (err.code) {
           case "quota_exceeded":
             setError("Cannot add more pages. Please remove existing pages and try again.");
@@ -188,26 +208,26 @@ export const App = () => {
           <Rows spacing="2u">
             <Title size="small">Frontpage</Title>
             <Text variant="bold">{boxData.frontpage.title}</Text>
-            <Text>
-              <strong>Ingredients:</strong>
+            <div>
+              <Text variant="bold">Ingredients:</Text>
               <ul>
                 {boxData.frontpage.ingredients.map((ingredient, index) => (
                   <li key={index}>{ingredient}</li>
                 ))}
               </ul>
-            </Text>
+            </div>
 
             <Title size="small">Recipes</Title>
             {boxData.recipes.map((recipe) => (
               <Rows key={recipe.id} spacing="0.5u">
                 <Text variant="bold">{recipe.title}</Text>
-                <Text size="small">
+                <div>
                   <ul>
                     {recipe.ingredients.map((ingredient, index) => (
                       <li key={index}>{ingredient}</li>
                     ))}
                   </ul>
-                </Text>
+                </div>
               </Rows>
             ))}
 

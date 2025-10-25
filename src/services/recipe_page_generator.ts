@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { BoxData, Recipe } from "../types";
 
 /**
@@ -6,10 +7,13 @@ import type { BoxData, Recipe } from "../types";
  * @returns Object mapping placeholder names to replacement values
  */
 export function createFrontpageReplacements(boxData: BoxData): Record<string, string> {
-  return {
+  console.log("Creating frontpage replacements for:", boxData.frontpage);
+  const replacements = {
     frontpageTitle: boxData.frontpage.title,
     frontpageIngredients: boxData.frontpage.ingredients.join('\n• '),
   };
+  console.log("Frontpage replacements created:", replacements);
+  return replacements;
 }
 
 /**
@@ -20,11 +24,14 @@ export function createFrontpageReplacements(boxData: BoxData): Record<string, st
  */
 export function createRecipeReplacements(recipe: Recipe, index: number): Record<string, string> {
   const recipeNumber = index + 1;
-  return {
+  console.log(`Creating recipe replacements for recipe ${recipeNumber}:`, recipe);
+  const replacements = {
     [`recipeTitle_${recipeNumber}`]: recipe.title,
     [`recipeDay_${recipeNumber}`]: recipe.day.toString(),
     [`recipeIngredients_${recipeNumber}`]: recipe.ingredients.join('\n• '),
   };
+  console.log(`Recipe ${recipeNumber} replacements created:`, replacements);
+  return replacements;
 }
 
 /**
@@ -100,17 +107,21 @@ export function createAllRecipeReplacements(recipes: Recipe[]): {
   simple: Record<string, string>;
   formatted: Record<string, { headers: string[]; content: string[] }>;
 } {
+  console.log("Creating all recipe replacements for recipes:", recipes);
   const allSimple: Record<string, string> = {};
   const allFormatted: Record<string, { headers: string[]; content: string[] }> = {};
 
   recipes.forEach((recipe, index) => {
+    console.log(`Processing recipe ${index + 1}:`, recipe);
     const recipeReplacements = createRecipePageReplacements(recipe, index);
     Object.assign(allSimple, recipeReplacements.simple);
     Object.assign(allFormatted, recipeReplacements.formatted);
   });
 
-  return {
+  const result = {
     simple: allSimple,
     formatted: allFormatted
   };
+  console.log("All recipe replacements created:", result);
+  return result;
 }
