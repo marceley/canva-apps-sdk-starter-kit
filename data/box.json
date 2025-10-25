@@ -7,7 +7,7 @@
     {
       "id": "1",
       "day": 1,
-      "name": "Kylling i karry",
+      "title": "Kylling i karry",
       "method": [
         {
           "header": "Inden du begynder",
@@ -36,7 +36,7 @@
     {
       "id": "2",
       "day": 2,
-      "name": "Kødboller med kartofler",
+      "title": "Kødboller med kartofler",
       "method": [
         {
           "header": "Inden du begynder",
@@ -65,7 +65,7 @@
     {
       "id": "3",
       "day": 3,
-      "name": "Albigon i sød sovs",
+      "title": "Albigon i sød sovs",
       "method": [
         {
           "header": "Inden du begynder",

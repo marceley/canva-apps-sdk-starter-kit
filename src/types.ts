@@ -1,6 +1,20 @@
 export interface Box {
   id: string;
   label: string;
+  templateId: string;
+}
+
+export interface MethodStep {
+  header?: string;
+  text: string;
+}
+
+export interface Recipe {
+  id: string;
+  day: number;
+  title: string;
+  ingredients: string[];
+  method: MethodStep[];
 }
 
 export interface BoxData {
@@ -8,11 +22,7 @@ export interface BoxData {
     title: string;
     ingredients: string[];
   };
-  recipes: {
-    id: string;
-    name: string;
-    ingredients: string[];
-  }[];
+  recipes: Recipe[];
 }
 
 export interface WeekOption {

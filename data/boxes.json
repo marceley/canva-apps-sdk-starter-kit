@@ -1,14 +1,17 @@
 [
   {
     "id": "aktiv-hverdag",
-    "label": "Aktiv hverdag"
+    "label": "Aktiv hverdag",
+    "templateId": "DAG2yR3gT7I"
   },
   {
     "id": "vegetarkassen",
-    "label": "Vegetarkassen"
+    "label": "Vegetarkassen",
+    "templateId": "DAG2yR3gT7I"
   },
   {
     "id": "veganer-kassen",
-    "label": "Veganer kassen"
+    "label": "Veganer kassen",
+    "templateId": "DAG2yR3gT7I"
   }
 ]
