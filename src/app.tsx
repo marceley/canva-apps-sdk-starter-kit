@@ -1,4 +1,4 @@
-import { Button, Rows, Text } from "@canva/app-ui-kit";
+import { Button, Rows, Text, Title } from "@canva/app-ui-kit";
 import { requestOpenExternalUrl } from "@canva/platform";
 import { FormattedMessage, useIntl } from "react-intl";
 import * as styles from "styles/components.css";
@@ -29,8 +29,19 @@ export const App = () => {
 
   return (
     <div className={styles.scrollContainer}>
-      <h1>Bambino's App 1</h1>
+      <Title size="large">
+        <FormattedMessage
+          defaultMessage="MAS Canva Recipes 1"
+          description="App title"
+        />
+      </Title>
       <Rows spacing="2u">
+        <Text>
+          <FormattedMessage
+            defaultMessage="Welcome to MAS Canva Recipes!"
+            description="Welcome message for MAS Canva Recipes."
+          />
+        </Text>
         <Text>
           <FormattedMessage
             defaultMessage="
