@@ -13,10 +13,8 @@ import * as styles from "styles/components.css";
 import { generateWeeks } from "utils/week_generator";
 import { fetchBoxes, fetchBoxData } from "./services/api";
 import type { Box, BoxData, WeekOption } from "./types";
-import { replacePlaceholders, replacePlaceholdersWithFormatting } from "utils/text_replacement";
 import { 
-  createFrontpageReplacements, 
-  createAllRecipeReplacements 
+  createCompleteRecipeBook
 } from "./services/recipe_page_generator";
 import { CanvaError } from "@canva/error";
 import { prepareDesignEditor } from "@canva/intents/design";
@@ -91,37 +89,15 @@ export const App = () => {
     setSuccess("");
 
     try {
-      // Get the selected box to access templateId
-      const selectedBoxData = boxes.find(box => box.id === selectedBox);
-      console.log("Selected box data:", selectedBoxData);
-      if (!selectedBoxData) {
-        throw new Error("Selected box not found");
-      }
-
-      // Process frontpage (current page) - replace placeholders
-      console.log("Creating frontpage replacements...");
-      const frontpageReplacements = createFrontpageReplacements(boxData);
-      console.log("Frontpage replacements:", frontpageReplacements);
-      console.log("Frontpage placeholders to look for:", Object.keys(frontpageReplacements).map(key => `{{${key}}}`));
-      await replacePlaceholders(frontpageReplacements);
-      console.log("Frontpage placeholders replaced");
-
-      // Create all recipe replacements for numbered placeholders
-      console.log("Creating all recipe replacements...");
-      const allRecipeReplacements = createAllRecipeReplacements(boxData.recipes);
-      console.log("All recipe replacements:", allRecipeReplacements);
-      console.log("Simple placeholders to look for:", Object.keys(allRecipeReplacements.simple).map(key => `{{${key}}}`));
-      console.log("Formatted placeholders to look for:", Object.keys(allRecipeReplacements.formatted).map(key => `{{${key}}}`));
+      console.log("Creating complete recipe book...");
+      console.log("Box data:", boxData);
+      console.log("Number of recipes:", boxData.recipes.length);
       
-      // Replace all recipe placeholders in the current document
-      console.log("Replacing recipe placeholders...");
-      await replacePlaceholdersWithFormatting(
-        allRecipeReplacements.simple,
-        allRecipeReplacements.formatted
-      );
-      console.log("Recipe placeholders replaced");
-
-      setSuccess(`Successfully filled placeholders on current page! Navigate to other pages in your template and run this again to fill all pages.`);
+      // Create complete recipe book with front page and all recipe pages
+      await createCompleteRecipeBook(boxData, boxData.recipes);
+      
+      const totalPages = boxData.recipes.length + 1; // +1 for front page
+      setSuccess(`Successfully created complete recipe book with ${totalPages} pages!`);
     } catch (err) {
       console.error("Error creating recipe document:", err);
       if (err instanceof CanvaError) {
@@ -237,7 +213,7 @@ export const App = () => {
               loading={isCreatingDocument}
               stretch
             >
-              Create Recipe Document
+              Create Complete Recipe Book
             </Button>
           </Rows>
         )}

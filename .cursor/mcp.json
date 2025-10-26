@@ -1,8 +1,11 @@
 {
   "mcpServers": {
-    "canva": {
+    "canva-dev": {
       "command": "npx",
-      "args": ["-y", "@canva/cli@latest", "mcp"]
+      "args": ["-y", "@canva/cli@latest", "mcp"],
+      "env": {
+        "NODE_PATH": "/Users/marceley/.nvm/versions/node/v20.10.0/bin"
+      }
     }
   }
 }
