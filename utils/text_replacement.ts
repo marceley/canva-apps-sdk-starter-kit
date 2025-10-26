@@ -18,7 +18,7 @@ export async function replacePlaceholders(
     async (session) => {
       console.log("Text replacement session started, processing", session.contents.length, "text ranges");
       if (session.contents.length === 0) {
-        console.log("WARNING: No text content found in the document! Make sure there are text elements with placeholders in your template.");
+        console.log("WARNING: No text content found on current page! Make sure you're on a page with text elements containing placeholders.");
         return;
       }
       // Process each text range in the session
@@ -56,7 +56,7 @@ export async function replacePlaceholders(
       // Commit all changes
       console.log("Committing text replacement changes...");
       await session.sync();
-      console.log("Text replacement completed");
+      console.log("Text replacement completed on current page");
     }
   );
 }
@@ -81,7 +81,7 @@ export async function replacePlaceholdersWithFormatting(
     async (session) => {
       console.log("Formatted text replacement session started, processing", session.contents.length, "text ranges");
       if (session.contents.length === 0) {
-        console.log("WARNING: No text content found in the document! Make sure there are text elements with placeholders in your template.");
+        console.log("WARNING: No text content found on current page! Make sure you're on a page with text elements containing placeholders.");
         return;
       }
       // Process each text range in the session
@@ -131,7 +131,7 @@ export async function replacePlaceholdersWithFormatting(
       // Commit all changes
       console.log("Committing formatted text replacement changes...");
       await session.sync();
-      console.log("Formatted text replacement completed");
+      console.log("Formatted text replacement completed on current page");
     }
   );
 }

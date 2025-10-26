@@ -121,7 +121,7 @@ export const App = () => {
       );
       console.log("Recipe placeholders replaced");
 
-      setSuccess(`Successfully filled recipe document with ${boxData.recipes.length} recipes!`);
+      setSuccess(`Successfully filled placeholders on current page! Navigate to other pages in your template and run this again to fill all pages.`);
     } catch (err) {
       console.error("Error creating recipe document:", err);
       if (err instanceof CanvaError) {
